@@ -1,11 +1,30 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { checkValidData } from "../utils/validate";
 import Header from "./Header";
 
 const Login = () => {
   const [isSignedIn, setIsSignedIn] = useState(true);
+  const [errorMessage, setErrorMessgae] = useState(null);
+
+  const username = useRef(null);
+  const email = useRef(null);
+  const password = useRef(null);
 
   const toggleSignInForm = () => {
     setIsSignedIn(!isSignedIn);
+  };
+
+  const handleButtonClick = (e) => {
+    e.preventDefault();
+    //validate the form data
+    const message = checkValidData(
+      email.current.value,
+      password.current.value,
+      username.current.value
+    );
+    setErrorMessgae(message);
+
+    //SignIn/SignUp
   };
 
   return (
@@ -22,24 +41,31 @@ const Login = () => {
         <h1 className="font-bold text-3xl py-4">
           {isSignedIn === true ? "Sign In" : "Sign Up"}
         </h1>
-        {isSignedIn && (
+        {!isSignedIn && (
           <input
+            ref={username}
             type="text"
-            placeholder="Full Name"
+            placeholder="Username"
             className="p-4 my-4 w-full bg-[#333] rounded-lg"
           />
         )}
         <input
+          ref={email}
           type="text"
           placeholder="Email Address"
           className="p-4 my-4 w-full bg-[#333] rounded-lg"
         />
+
         <input
+          ref={password}
           type="password"
           placeholder="Password"
           className="p-4 my-4  w-full bg-[#333] rounded-lg"
         />
-        <button className="p-4 my-6 cursor-pointer bg-red-600 w-full rounded-lg">
+        <p className="text-red-500 font-bold text-xl py-2">{errorMessage}</p>
+        <button
+          className="p-4 my-6 cursor-pointer bg-red-600 w-full rounded-lg"
+          onClick={handleButtonClick}>
           {isSignedIn === true ? "Sign In" : "Sign Up"}
         </button>
         <p className="py-4 cursor-pointer" onClick={toggleSignInForm}>
