@@ -1,12 +1,16 @@
 import React, { useRef, useState } from "react";
 import { checkValidData } from "../utils/validate";
 import Header from "./Header";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firbase";
 
 const Login = () => {
   const [isSignedIn, setIsSignedIn] = useState(true);
-  const [errorMessage, setErrorMessgae] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  const username = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
 
@@ -16,13 +20,41 @@ const Login = () => {
 
   const handleButtonClick = (e) => {
     e.preventDefault();
+
     //validate the form data
-    const message = checkValidData(
-      email.current.value,
-      password.current.value,
-      username.current.value
-    );
-    setErrorMessgae(message);
+    const message = checkValidData(email.current.value, password.current.value);
+    setErrorMessage(message);
+    if (message) return;
+    if (!isSignedIn) {
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "" + errorMessage);
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          // console.log(user);
+        })
+        .catch((error) => {
+          // const errorCode = error.code;
+          // const errorMessage = error.message;
+          setErrorMessage("Your email or password is wrong");
+        });
+    }
 
     //SignIn/SignUp
   };
@@ -43,7 +75,6 @@ const Login = () => {
         </h1>
         {!isSignedIn && (
           <input
-            ref={username}
             type="text"
             placeholder="Username"
             className="p-4 my-4 w-full bg-[#333] rounded-lg"
@@ -62,7 +93,9 @@ const Login = () => {
           placeholder="Password"
           className="p-4 my-4  w-full bg-[#333] rounded-lg"
         />
-        <p className="text-red-500 font-bold text-xl py-2">{errorMessage}</p>
+        <p className="text-red-500 font-bold text-xl py-2">
+          {errorMessage !== null ? errorMessage : ""}
+        </p>
         <button
           className="p-4 my-6 cursor-pointer bg-red-600 w-full rounded-lg"
           onClick={handleButtonClick}>
