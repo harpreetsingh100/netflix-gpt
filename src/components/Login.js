@@ -4,15 +4,22 @@ import Header from "./Header";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firbase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../redux/userSlice";
 
 const Login = () => {
   const [isSignedIn, setIsSignedIn] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const email = useRef(null);
   const password = useRef(null);
+  const name = useRef(null);
 
   const toggleSignInForm = () => {
     setIsSignedIn(!isSignedIn);
@@ -33,6 +40,19 @@ const Login = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
+          updateProfile(user, {
+            displayName: name.current.value,
+          })
+            .then(() => {
+              const { uid, email, displayName } = auth.currentUser;
+              dispatch(
+                addUser({ uid: uid, email: email, displayName: displayName })
+              );
+              navigate("/browse");
+            })
+            .catch((error) => {
+              setErrorMessage(error.message);
+            });
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -47,7 +67,7 @@ const Login = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
-          // console.log(user);
+          navigate("/browse");
         })
         .catch((error) => {
           // const errorCode = error.code;
@@ -75,6 +95,7 @@ const Login = () => {
         </h1>
         {!isSignedIn && (
           <input
+            ref={name}
             type="text"
             placeholder="Username"
             className="p-4 my-4 w-full bg-[#333] rounded-lg"
@@ -93,9 +114,7 @@ const Login = () => {
           placeholder="Password"
           className="p-4 my-4  w-full bg-[#333] rounded-lg"
         />
-        <p className="text-red-500 font-bold text-xl py-2">
-          {errorMessage !== null ? errorMessage : ""}
-        </p>
+        <p className="text-red-500 font-bold text-xl py-2">{errorMessage}</p>
         <button
           className="p-4 my-6 cursor-pointer bg-red-600 w-full rounded-lg"
           onClick={handleButtonClick}>
