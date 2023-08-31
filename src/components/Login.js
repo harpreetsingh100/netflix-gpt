@@ -39,6 +39,7 @@ const Login = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
+
           updateProfile(user, {
             displayName: name.current.value,
           })
@@ -47,6 +48,7 @@ const Login = () => {
               dispatch(
                 addUser({ uid: uid, email: email, displayName: displayName })
               );
+              console.log(auth.currentUser);
             })
             .catch((error) => {
               setErrorMessage(error.message);
