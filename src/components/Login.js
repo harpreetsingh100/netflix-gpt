@@ -79,16 +79,18 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <Header />
+    <div className="h-screen">
+      <div className="hidden md:inline-block">
+        <Header />
+      </div>
       <div>
         <img
-          className="absolute h-full w-full object-cover"
+          className="absolute h-full w-full object-cover "
           src="https://assets.nflxext.com/ffe/siteui/vlv3/00103100-5b45-4d4f-af32-342649f1bda5/3bd48e1e-8f08-497c-b50b-44d0aebc2a65/US-en-20230821-popsignuptwoweeks-perspective_alpha_website_large.jpg"
           alt="background-img"
         />
       </div>
-      <form className="absolute my-36 mx-auto right-0 left-0 p-12 bg-black w-3/12 bg-opacity-80 text-white">
+      <form className="absolute md:my-36 mx-auto right-0 left-0 p-8 mt-10  md:p-12 bg-black md:w-3/12 bg-opacity-80 text-white w-3/4 max-h-[800px]">
         <h1 className="font-bold text-3xl py-4">
           {isSignedIn === true ? "Sign In" : "Sign Up"}
         </h1>
@@ -115,7 +117,7 @@ const Login = () => {
         />
         <p className="text-red-500 font-bold text-xl py-2">{errorMessage}</p>
         <button
-          className="p-4 my-6 cursor-pointer bg-red-600 w-full rounded-lg"
+          className="p-2 md:my-6 cursor-pointer bg-red-600 w-full rounded-lg"
           onClick={handleButtonClick}>
           {isSignedIn === true ? "Sign In" : "Sign Up"}
         </button>
