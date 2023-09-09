@@ -90,7 +90,7 @@ const Login = () => {
           alt="background-img"
         />
       </div>
-      <form className="h-auto py-0 md:py-2  absolute md:h-78  mx-auto right-0 left-0 p-8 mt-10 md:mt-12 md:p-12 bg-black sm:w-2/4  md:w-5/12  xl:w-4/12  bg-opacity-80 text-white w-3/4 max-h-[800px] ">
+      <form className="h-auto py-0 md:py-2  absolute md:h-78  mx-auto right-0 left-0 p-8 mt-16 md:p-12 bg-black sm:w-2/4  md:w-5/12  xl:w-4/12  bg-opacity-80 text-white w-3/4 max-h-[800px] sm:mt-[150px] md:mt-[110px]">
         <h1 className="font-bold text-3xl py-4 text-center">
           {isSignedIn === true ? "Sign In" : "Sign Up"}
         </h1>
